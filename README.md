@@ -1,3 +1,3 @@
-# STAT 545 exploration
-
-This repo is part of a STAT 545 exercise to explore GitHub and markdown.
+# MyRepo
+For R Studio
+"This is a line from RStudio"
