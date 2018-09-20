@@ -115,22 +115,49 @@ Let's build a histogram of life expectancy.
 | Grammar Component     | Specification |
 |-----------------------|---------------|
 | __data__              | `gapminder` |
-| __aesthetic mapping__ |  |
-| __geometric object__  |  |
-| scale                 |  |
+| __aesthetic mapping__ |  `x`|
+| __geometric object__  |  histogram|
+| scale                 |  linear|
 | statistical transform |  |
 
 2. Build the histogram of life expectancy.
 
+```{r}
+ggplot(gapminder, aes(lifeExp)) +
+  geom_histogram()
+```
 
 
 3. Change the number of bins to 50.
 
+```{r}
+ggplot(gapminder, aes(lifeExp)) +
+  geom_histogram(bins = 50)
+```
+```{r}
+ggplot(gapminder, aes(lifeExp)) +
+  geom_histogram(bins = 10)
+```
 
 
 4. Instead of a histogram, let's create a kernel density plot.
 
+```{r}
+ggplot(gapminder, aes(lifeExp)) +
+  geom_density()
 
+```
+
+```{r}
+ggplot(gapminder, aes(lifeExp)) +
+  geom_density(bw=0.1)
+```
+
+```{r}
+ggplot(gapminder, aes(lifeExp)) +
+  geom_histogram(aes(y=..density..), fill = 'blue') +
+  geom_density()
+```
 
 5. Optional: git stage and commit
 
@@ -139,6 +166,8 @@ __Uses of a histogram__: Explore the distribution of a single numeric variable.
 
 ## Box plots, and violin plots
 
+#boxplots are useful for one numeric variable across cateogires (e.g., lifeExp by country/continent etc.,)
+
 Let's make _box plots_ of population for each continent. Note: y-axis is much better on a log scale!
 
 1. Fill out the grammar components below. Again, bold _must_ be specified to make a `ggplot2` plot.
@@ -146,21 +175,47 @@ Let's make _box plots_ of population for each continent. Note: y-axis is much be
 | Grammar Component     | Specification |
 |-----------------------|---------------|
 | __data__              | `gapminder` |
-| __aesthetic mapping__ |  |
-| __geometric object__  |  |
-| scale                 |  |
-| statistical transform |  |
+| __aesthetic mapping__ |  `x` and `y`|
+| __geometric object__  |  boxplot|
+| scale                 |  log-y|
+| statistical transform |  5-number summary|
 
 2. Initiate the `ggplot` call, with the log y scale, and store it in the variable `a`. Print out `a`.
+
+```{r}
+a <- ggplot(gapminder, aes(continent, pop)) +
+  scale_y_log10()
+
+
+```
+
+```{r}
+a
+
+```
 
 
 
 3. Add the boxplot geom to `a`.
 
+```{r}
+a + geom_boxplot()
+```
 
 
 4. A violin plot is a kernel density on its side, made symmetric. Add that geom to `a`.
     - What's better here, boxplots or violin plots? Why?
+
+#violin plots are great. Violin plots are kernel density plots put on side
+
+```{r}
+a + geom_violin()
+  
+```
+```{r}
+a + geom_violin() + geom_boxplot()
+```
+
 
 5. Optional: git stage and commit
 
@@ -174,6 +229,12 @@ Let's hold off on identifying the grammar.
 
 1. Initiate the `ggplot` call to make a scatterplot of `continent` vs `pop`; initiate the log y scale. Store the call in the variable `b`.
 
+```{r}
+a + geom_point()
+```
+```{r}
+a + geom_point(alpha=0.1)
+```
 
 
 2. Add the point geom to `b`. Why is this an ineffective plot?
@@ -182,14 +243,21 @@ Let's hold off on identifying the grammar.
 
 3. A solution is to jitter the points. Add the jitter geom. Re-run the command a few times -- does the plot change? Why?
 
+```{r}
+a + geom_jitter(alpha=0.25)
+```
 
 
 4. How does the grammar differ from a box plot or violin plot?
     - ANSWER: 
-
+#try jitter to violin plot -great visiaul
 5. We can add multiple geom _layers_ to our plot. Put a jitterplot overtop of the violin plot, starting with our base `b`. Try vice-versa. 
 
-
+```{r}
+a + geom_violin() +
+  geom_jitter(alpha=0.1)
+```
+#this is even better because it gives you an idea about the total number of datapoints (lets you see all the info versus pinhead plots or boxplots etc.,), also lets you see outliers 
 
 6. Optional: git stage and commit
 
@@ -204,9 +272,9 @@ Let's make some time/line plot, starting with Canada's life expectancy over time
 | Grammar Component     | Specification |
 |-----------------------|---------------|
 | __data__              | `gapminder` |
-| __aesthetic mapping__ | 'x' and 'y' |
-| __geometric object__  | point |
-| scale                 |  linear |
+| __aesthetic mapping__ |  |
+| __geometric object__  |  |
+| scale                 |  |
 | statistical transform |  |
 
 2. In one readable call, write code that:
@@ -215,9 +283,23 @@ Let's make some time/line plot, starting with Canada's life expectancy over time
     3. Makes the time plot of `lifeExp` over time
     4. Also displays the points
 
+#piping doesn't work in ggplot, so use "+" sign
+```{r}
+gapminder %>% 
+  filter(country == "Canada") %>% 
+  ggplot(aes(year, lifeExp)) +
+  geom_line() +
+  geom_point()
+```
 
 
 3. Attempt to overlay line plots for all countries. That is, repeat the above code, but don't filter. What's wrong here?
+
+```{r}
+c <-ggplot(gapminder, aes(year, lifeExp))
+c + geom_line()
+c + geom_line (aes(group = country), alpha = 0.2)
+```
 
 
 
