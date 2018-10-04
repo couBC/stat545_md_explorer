@@ -1,0 +1,580 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={cm005: dplyr Exercise},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{{#1}}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\ImportTok}[1]{{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{{#1}}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{{#1}}}}
+\newcommand{\BuiltInTok}[1]{{#1}}
+\newcommand{\ExtensionTok}[1]{{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{{#1}}}
+\newcommand{\RegionMarkerTok}[1]{{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\NormalTok}[1]{{#1}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{cm005: \texttt{dplyr} Exercise}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+
+\begin{document}
+\maketitle
+
+\section{Hello yes}\label{hello-yes}
+
+\textbf{Optional, but recommended startup}:
+
+Change the file output to both html and md \emph{documents} (not
+notebook).
+
+\section{\texorpdfstring{Intro to \texttt{dplyr}
+syntax}{Intro to dplyr syntax}}\label{intro-to-dplyr-syntax}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Load the \texttt{gapminder} and \texttt{tidyverse} packages. Hint:
+  \texttt{suppressPackageStartupMessages()}!
+
+  \begin{itemize}
+  \tightlist
+  \item
+    This loads \texttt{dplyr}, too.
+  \end{itemize}
+\item
+  \texttt{knit} the document.
+\end{enumerate}
+
+\subsection{\texorpdfstring{\texttt{select()}}{select()}}\label{select}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Make a data frame containing the columns \texttt{year},
+  \texttt{lifeExp}, \texttt{country} from the gapminder data, in that
+  order.
+\item
+  Select all variables, from \texttt{country} to \texttt{lifeExp}.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(gapminder)}
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages ---------------------------------- tidyverse 1.2.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## √ ggplot2 3.0.0     √ purrr   0.2.5
+## √ tibble  1.4.2     √ dplyr   0.7.6
+## √ tidyr   0.8.1     √ stringr 1.2.0
+## √ readr   1.1.1     √ forcats 0.3.0
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------- tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{select}\NormalTok{(gapminder, country:lifeExp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1,704 x 4
+##    country     continent  year lifeExp
+##    <fct>       <fct>     <int>   <dbl>
+##  1 Afghanistan Asia       1952    28.8
+##  2 Afghanistan Asia       1957    30.3
+##  3 Afghanistan Asia       1962    32.0
+##  4 Afghanistan Asia       1967    34.0
+##  5 Afghanistan Asia       1972    36.1
+##  6 Afghanistan Asia       1977    38.4
+##  7 Afghanistan Asia       1982    39.9
+##  8 Afghanistan Asia       1987    40.8
+##  9 Afghanistan Asia       1992    41.7
+## 10 Afghanistan Asia       1997    41.8
+## # ... with 1,694 more rows
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Select all variables, except \texttt{lifeExp}.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a <-}\StringTok{ }\KeywordTok{select}\NormalTok{(gapminder, -lifeExp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Put \texttt{continent} first. Hint: use the \texttt{everything()}
+  function.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{select}\NormalTok{(gapminder, continent, }\KeywordTok{everything}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1,704 x 6
+##    continent country      year lifeExp      pop gdpPercap
+##    <fct>     <fct>       <int>   <dbl>    <int>     <dbl>
+##  1 Asia      Afghanistan  1952    28.8  8425333      779.
+##  2 Asia      Afghanistan  1957    30.3  9240934      821.
+##  3 Asia      Afghanistan  1962    32.0 10267083      853.
+##  4 Asia      Afghanistan  1967    34.0 11537966      836.
+##  5 Asia      Afghanistan  1972    36.1 13079460      740.
+##  6 Asia      Afghanistan  1977    38.4 14880372      786.
+##  7 Asia      Afghanistan  1982    39.9 12881816      978.
+##  8 Asia      Afghanistan  1987    40.8 13867957      852.
+##  9 Asia      Afghanistan  1992    41.7 16317921      649.
+## 10 Asia      Afghanistan  1997    41.8 22227415      635.
+## # ... with 1,694 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{select}\NormalTok{(gapminder, continent, year, continent)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1,704 x 2
+##    continent  year
+##    <fct>     <int>
+##  1 Asia       1952
+##  2 Asia       1957
+##  3 Asia       1962
+##  4 Asia       1967
+##  5 Asia       1972
+##  6 Asia       1977
+##  7 Asia       1982
+##  8 Asia       1987
+##  9 Asia       1992
+## 10 Asia       1997
+## # ... with 1,694 more rows
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Rename \texttt{continent} to \texttt{cont}.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{rename}\NormalTok{(gapminder, }\DataTypeTok{cont=}\NormalTok{continent)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1,704 x 6
+##    country     cont   year lifeExp      pop gdpPercap
+##    <fct>       <fct> <int>   <dbl>    <int>     <dbl>
+##  1 Afghanistan Asia   1952    28.8  8425333      779.
+##  2 Afghanistan Asia   1957    30.3  9240934      821.
+##  3 Afghanistan Asia   1962    32.0 10267083      853.
+##  4 Afghanistan Asia   1967    34.0 11537966      836.
+##  5 Afghanistan Asia   1972    36.1 13079460      740.
+##  6 Afghanistan Asia   1977    38.4 14880372      786.
+##  7 Afghanistan Asia   1982    39.9 12881816      978.
+##  8 Afghanistan Asia   1987    40.8 13867957      852.
+##  9 Afghanistan Asia   1992    41.7 16317921      649.
+## 10 Afghanistan Asia   1997    41.8 22227415      635.
+## # ... with 1,694 more rows
+\end{verbatim}
+
+\subsection{\texorpdfstring{\texttt{arrange()}}{arrange()}}\label{arrange}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Order by year.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{arrange}\NormalTok{(gapminder, }\KeywordTok{desc}\NormalTok{(lifeExp))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1,704 x 6
+##    country          continent  year lifeExp       pop gdpPercap
+##    <fct>            <fct>     <int>   <dbl>     <int>     <dbl>
+##  1 Japan            Asia       2007    82.6 127467972    31656.
+##  2 Hong Kong, China Asia       2007    82.2   6980412    39725.
+##  3 Japan            Asia       2002    82   127065841    28605.
+##  4 Iceland          Europe     2007    81.8    301931    36181.
+##  5 Switzerland      Europe     2007    81.7   7554661    37506.
+##  6 Hong Kong, China Asia       2002    81.5   6762476    30209.
+##  7 Australia        Oceania    2007    81.2  20434176    34435.
+##  8 Spain            Europe     2007    80.9  40448191    28821.
+##  9 Sweden           Europe     2007    80.9   9031088    33860.
+## 10 Israel           Asia       2007    80.7   6426679    25523.
+## # ... with 1,694 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{arrange}\NormalTok{(gapminder, lifeExp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1,704 x 6
+##    country      continent  year lifeExp     pop gdpPercap
+##    <fct>        <fct>     <int>   <dbl>   <int>     <dbl>
+##  1 Rwanda       Africa     1992    23.6 7290203      737.
+##  2 Afghanistan  Asia       1952    28.8 8425333      779.
+##  3 Gambia       Africa     1952    30    284320      485.
+##  4 Angola       Africa     1952    30.0 4232095     3521.
+##  5 Sierra Leone Africa     1952    30.3 2143249      880.
+##  6 Afghanistan  Asia       1957    30.3 9240934      821.
+##  7 Cambodia     Asia       1977    31.2 6978607      525.
+##  8 Mozambique   Africa     1952    31.3 6446316      469.
+##  9 Sierra Leone Africa     1957    31.6 2295678     1004.
+## 10 Burkina Faso Africa     1952    32.0 4469979      543.
+## # ... with 1,694 more rows
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  Order by year, in descending order.
+\item
+  Order by year, then by life expectancy.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{arrange}\NormalTok{(gapminder, year, lifeExp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1,704 x 6
+##    country       continent  year lifeExp     pop gdpPercap
+##    <fct>         <fct>     <int>   <dbl>   <int>     <dbl>
+##  1 Afghanistan   Asia       1952    28.8 8425333      779.
+##  2 Gambia        Africa     1952    30    284320      485.
+##  3 Angola        Africa     1952    30.0 4232095     3521.
+##  4 Sierra Leone  Africa     1952    30.3 2143249      880.
+##  5 Mozambique    Africa     1952    31.3 6446316      469.
+##  6 Burkina Faso  Africa     1952    32.0 4469979      543.
+##  7 Guinea-Bissau Africa     1952    32.5  580653      300.
+##  8 Yemen, Rep.   Asia       1952    32.5 4963829      782.
+##  9 Somalia       Africa     1952    33.0 2526994     1136.
+## 10 Guinea        Africa     1952    33.6 2664249      510.
+## # ... with 1,694 more rows
+\end{verbatim}
+
+\subsection{\texorpdfstring{Piping,
+\texttt{\%\textgreater{}\%}}{Piping, \%\textgreater{}\%}}\label{piping}
+
+\section{runs function upon function upon
+function}\label{runs-function-upon-function-upon-function}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Make a data frame containing the columns \texttt{year},
+  \texttt{lifeExp}, \texttt{country} from the gapminder data, in that
+  order. \#command shift m
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gapminder %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select}\NormalTok{(year, lifeExp, country) %>%}
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(year, lifeExp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1,704 x 3
+##     year lifeExp country      
+##    <int>   <dbl> <fct>        
+##  1  1952    28.8 Afghanistan  
+##  2  1952    30   Gambia       
+##  3  1952    30.0 Angola       
+##  4  1952    30.3 Sierra Leone 
+##  5  1952    31.3 Mozambique   
+##  6  1952    32.0 Burkina Faso 
+##  7  1952    32.5 Guinea-Bissau
+##  8  1952    32.5 Yemen, Rep.  
+##  9  1952    33.0 Somalia      
+## 10  1952    33.6 Guinea       
+## # ... with 1,694 more rows
+\end{verbatim}
+
+Note: think of \texttt{\%\textgreater{}\%} as the word ``then''!
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Combine \texttt{select()} Task 1 with \texttt{arrange()} Task 3.
+\end{enumerate}
+
+\subsection{\texorpdfstring{\texttt{filter()}}{filter()}}\label{filter}
+
+\section{filter function selects rows rather than columns like
+select}\label{filter-function-selects-rows-rather-than-columns-like-select}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Only take data with population greater than 100 million.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gapminder%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(pop >}\DecValTok{100000000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 77 x 6
+##    country    continent  year lifeExp       pop gdpPercap
+##    <fct>      <fct>     <int>   <dbl>     <int>     <dbl>
+##  1 Bangladesh Asia       1987    52.8 103764241      752.
+##  2 Bangladesh Asia       1992    56.0 113704579      838.
+##  3 Bangladesh Asia       1997    59.4 123315288      973.
+##  4 Bangladesh Asia       2002    62.0 135656790     1136.
+##  5 Bangladesh Asia       2007    64.1 150448339     1391.
+##  6 Brazil     Americas   1972    59.5 100840058     4986.
+##  7 Brazil     Americas   1977    61.5 114313951     6660.
+##  8 Brazil     Americas   1982    63.3 128962939     7031.
+##  9 Brazil     Americas   1987    65.2 142938076     7807.
+## 10 Brazil     Americas   1992    67.1 155975974     6950.
+## # ... with 67 more rows
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Of those, only take data from Asia.
+\end{enumerate}
+
+\subsection{git stuff (Optional)}\label{git-stuff-optional}
+
+Knit, commit, push!
+
+\section{Break/Challenge:
+metaprogramming}\label{breakchallenge-metaprogramming}
+
+Here's an activity for you to do during the break, in case you're all
+caught up. It should help you understand metaprogramming a bit more.
+
+Suppose you're the instructor of an R programming course. You write an
+assignment question to evaluate whether students can write an
+\texttt{if} statement, for which an answer to the question looks
+something like this:
+
+\begin{verbatim}
+my_commute <- 60
+if (my_commute > 30) {
+    print("That's a long commute!")
+} else {
+    print("That's a short commute.")
+}
+\end{verbatim}
+
+Your task is to use metaprogramming to check whether a response (like
+the one above) works and contains an \texttt{if} statement. You should
+roughly follow these steps, using
+\href{https://adv-r.hadley.nz/expressions.html}{adv-r: expressions} as a
+resource (especially Section 18.1).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Wrap the above block of code in the \texttt{expr()} function from the
+  \texttt{rlang} package.
+\item
+  Use the \texttt{eval()} function to execute the code, to see if the
+  code runs.
+\item
+  Use the \texttt{as.character()} function to check whether this
+  response contains an \texttt{if} statement.
+\end{enumerate}
+
+\section{Relational/Comparison and Logical Operators in
+R}\label{relationalcomparison-and-logical-operators-in-r}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Find all entries of Canada and Algeria occuring in the '60s.
+\item
+  Find all entries of Canada, and entries of Algeria occuring in the
+  '60s.
+\item
+  Find all entries \emph{not} including Canada and Algeria.
+\end{enumerate}
+
+\section{Bonus Exercises}\label{bonus-exercises}
+
+If there's time remaining, we'll practice with these three exercises.
+I'll give you 1 minute for each, then we'll go over the answer.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Take all countries in Europe that have a GDP per capita greater than
+  10000, and select all variables except \texttt{gdpPercap}. (Hint: use
+  \texttt{-}).
+\item
+  Take the first three columns, and extract the names.
+\item
+  Of the \texttt{iris} data frame, take all columns that start with the
+  word ``Petal''.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Hint: take a look at the ``Select helpers'' documentation by running
+    the following code: \texttt{?tidyselect::select\_helpers}.
+  \item
+    Exercise from
+    \href{https://www.r-exercises.com/2017/10/19/dplyr-basic-functions-exercises/}{r-exercises}.
+  \end{itemize}
+\end{enumerate}
+
+
+\end{document}

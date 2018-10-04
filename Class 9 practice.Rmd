@@ -1,0 +1,231 @@
+---
+title: "Class 9 practice"
+author: "CouBC"
+date: '2018-10-02'
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+dat <- data.frame(
+   id = LETTERS[1:5],
+   x = sample(0:1, 5, TRUE),
+   y = sample(0:1, 5, TRUE),
+   z = sample(0:1, 5, TRUE)
+)
+```{r}
+dat <- data.frame(id = LETTERS[1:5])
+print(dat)
+```
+
+```{r}
+#sample generates random letters - need to add TRUE for it to work
+
+dat <- data.frame(id = LETTERS[1:5], x = sample(0:1, 5, TRUE))
+print(dat)
+```
+
+```{r}
+dat <- data.frame(id = LETTERS[1:5], x = sample(0:1, 5, TRUE), y = sample(0:1, 5, TRUE), z = sample(0:1, 5, TRUE))
+print(dat)
+```
+
+
+rnorm() generates random numbers pos/and neg but needs three items in its argument which I dont understand
+e.g., rnorm(1, 2, 3)
+
+
+Gather in action
+dat %>% gather(item, scores, -c(id))
+
+```{r}
+dat %>% 
+  gather(item, scores, -c(id)) %>% 
+  knitr::kable()
+```
+
+Spread it out:
+
+```{r}
+dat %>% gather(item, scores, -c(id)) %>%
+    spread(item, scores)
+```
+
+```{r}
+#alternatively:
+
+dat %>% gather(item, scores, x:z) %>% 
+knitr::kable()
+```
+
+```{r}
+#or this works too:
+dat %>% gather(item, scores, x, y, z) 
+```
+
+dat %>% gather(item, scores, -c(id)) %>%
+    spread(id, scores)
+    
+or 
+
+dat %>% gather(item, scores, -c(id)) %>%
+    spread(item, scores)
+    
+  Read these three LOTR csv's, saving them to `lotr1`, `lotr2`, and `lotr3`:
+
+- https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Fellowship_Of_The_Ring.csv
+- https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Two_Towers.csv
+- https://github.com/jennybc/lotr-tidy/blob/master/data/The_Return_Of_The_King.csv
+
+```{r}
+lotr1 <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Fellowship_Of_The_Ring.csv")
+lotr2 <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Two_Towers.csv")
+lotr3 <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Return_Of_The_King.csv")
+```
+
+```{r}
+lotr1
+```
+
+```{r}
+lotr2
+
+```
+
+```{r}
+lotr3
+```
+
+```{r}
+lotr.untidy <- bind_rows(lotr1, lotr2, lotr3) 
+```
+
+
+```{r}
+str(lotr.untidy)
+```
+
+```{r}
+lotr.untidy
+```
+
+
+
+```{r}
+#Jenny's way
+lotr.tidy <- gather(lotr.untidy, key = "Gender", value = 'Words', Female, Male )
+lotr.tidy
+
+```
+
+
+
+```{r}
+lotr.tidy %>% 
+  count(Gender, Race, wt = words)
+```
+
+```{r}
+table1
+#> # A tibble: 6 x 4
+#>   country      year  cases population
+#>   <chr>       <int>  <int>      <int>
+#> 1 Afghanistan  1999    745   19987071
+#> 2 Afghanistan  2000   2666   20595360
+#> 3 Brazil       1999  37737  172006362
+#> 4 Brazil       2000  80488  174504898
+#> 5 China        1999 212258 1272915272
+#> 6 China        2000 213766 1280428583
+```
+
+```{r}
+table2 
+#> # A tibble: 12 x 4
+#>   country      year type           count
+#>   <chr>       <int> <chr>          <int>
+#> 1 Afghanistan  1999 cases            745
+#> 2 Afghanistan  1999 population  19987071
+#> 3 Afghanistan  2000 cases           2666
+#> 4 Afghanistan  2000 population  20595360
+#> 5 Brazil       1999 cases          37737
+#> 6 Brazil       1999 population 172006362
+#> # ... with 6 more rows
+```
+
+```{r}
+table3
+#> # A tibble: 6 x 3
+#>   country      year rate             
+#> * <chr>       <int> <chr>            
+#> 1 Afghanistan  1999 745/19987071     
+#> 2 Afghanistan  2000 2666/20595360    
+#> 3 Brazil       1999 37737/172006362  
+#> 4 Brazil       2000 80488/174504898  
+#> 5 China        1999 212258/1272915272
+#> 6 China        2000 213766/1280428583
+
+```
+
+```{r}
+table4a  # cases
+#> # A tibble: 3 x 3
+#>   country     `1999` `2000`
+#> * <chr>        <int>  <int>
+#> 1 Afghanistan    745   2666
+#> 2 Brazil       37737  80488
+#> 3 China       212258 213766
+
+table4b  # population
+#> # A tibble: 3 x 3
+#>   country         `1999`     `2000`
+#> * <chr>            <int>      <int>
+#> 1 Afghanistan   19987071   20595360
+#> 2 Brazil       172006362  174504898
+#> 3 China       1272915272 1280428583
+```
+
+```{r}
+table4a
+```
+
+```{r}
+table4b
+```
+
+```{r}
+table2
+```
+
+
+
+Compute the rate for table2, and table4a + table4b. You will need to perform four operations:
+
+    Extract the number of TB cases per country per year.
+    Extract the matching population per country per year.
+    Divide cases by population, and multiply by 10000.
+    Store back in the appropriate place.
+
+Which representation is easiest to work with? Which is hardest? Why?
+
+For Table 2, we need to first create separate tables for cases and population and ensure that they are sorted in the same order.
+
+t2_cases <- filter(table2, type == "cases") %>%
+  rename(cases = count) %>%
+  arrange(country, year)
+t2_population <- filter(table2, type == "population") %>%
+  rename(population = count) %>%
+  arrange(country, year)
+
+```{r}
+t2_cases <- filter(table2, type == "cases") %>% 
+  rename(cases = count) %>% 
+  arrange(country, year)
+
+t2_cases
+```
+

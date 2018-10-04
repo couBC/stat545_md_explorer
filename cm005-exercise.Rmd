@@ -94,14 +94,10 @@ gapminder%>%
 
 
 2. Of those, only take data from Asia.
-```{r
-gapminder%>%
-  filter(
-``
+
 ```{r}
-
+gapminder %>% filter(continent=="Asia")
 ```
-
 
 ## git stuff (Optional)
 
@@ -133,13 +129,13 @@ Your task is to use metaprogramming to check whether a response (like the one ab
 1. Find all entries of Canada and Algeria occuring in the '60s. 
 ```{r}
 gapminder %>% 
-  filter((country=="Canada" | country == "Algeria") & year >=1960 $ year < 1970)
-  
+  filter((country=="Canada" | country == "Algeria") & year >=1960 & year < 1970)
 
 ```
+
 ```{r}
 gapminder %>%
-  filter (country %>% c("Canada", "Algeria"),
+  filter(country %>% c("Canada", "Algeria"),
     year >= 1960, year <1970)
     
 ```

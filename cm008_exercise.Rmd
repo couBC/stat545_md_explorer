@@ -18,6 +18,9 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(gapminder))
 ```
 
+```{r}
+getwd()
+```
 
 ## `mutate()`
 
