@@ -414,6 +414,4 @@ Special scoping rule for functions! R knows whether or not to look for a functio
 
 8. Look at the source code of the `pryr:where()` function. It contains a line that creates a binding for "env". Why, then, is `env` nowhere to be found? Answer: execution environments. 
 
-```{r}
-pryr::where
-```
+
