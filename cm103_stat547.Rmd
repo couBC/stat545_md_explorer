@@ -186,6 +186,12 @@ map_chr(wesanderson, vec1)
 ##Method 2:head
 map_chr(wesanderson, head, n=1)
 
+##Method 3:
+map_chr(wesanderson, `[`, 1)
+
+#`[` is same as x[1]
+
+
 #different ways of getting the same thing
 ```
 
