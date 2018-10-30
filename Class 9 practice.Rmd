@@ -222,10 +222,210 @@ t2_population <- filter(table2, type == "population") %>%
   arrange(country, year)
 
 ```{r}
+#Extract the number of TB cases per country per year.
+
 t2_cases <- filter(table2, type == "cases") %>% 
   rename(cases = count) %>% 
   arrange(country, year)
 
+# Extract the matching population per country per year.
+
+t2_population <- filter(table2, type == "population") %>% 
+  rename(population = count) %>%
+  arrange(country, year)
+
+t2_population
 t2_cases
+
+```
+
+Calculate the cases per capita in a separate data frame.
+
+t2_cases_per_cap <- t2_cases %>%
+  mutate(population = t2_population$population,
+         cases_per_cap = (cases / population) * 10000) %>%
+  select(country, year, cases_per_cap)
+
+```{r}
+#Divide cases by population, and multiply by 10000.
+
+t2_cases_per_cap <- t2_cases %>% 
+  mutate(population = t2_population$population,
+         cases_per_cap = (cases / population) * 10000) %>% 
+  select(country, year, cases_per_cap)
+
+t2_cases_per_cap
+
+```
+
+```{r}
+#For table4a and table4b, we will create a separate table for cases per capita (table4c), with country rows and year columns.
+
+tibble(country = table4a$country,
+       `1999` = table4a[["1999"]] / table4b[["1999"]] * 10000,
+       `2000` = table4a[["2000"]] / table4b[["2000"]] * 10000)
+
+```
+
+```{r}
+
+#Table2 is most complex to calculate, Table4a Table4b better, but if we tried this from Table1 we could caclulate with mutate
+
+table1 %>% 
+  mutate(cases_per_capita = cases / population * 10000)
+```
+
+```{r}
+#gathering table4a
+
+table4a %>% 
+  gather("1999", "2000", key = year, value = count)
+```
+
+To combine the tidied versions of table4a and table4b into a single tibble, we need to use dplyr::left_join(), which you’ll learn about in relational data.
+
+tidy4a <- table4a %>% 
+  gather(`1999`, `2000`, key = "year", value = "cases")
+tidy4b <- table4b %>% 
+  gather(`1999`, `2000`, key = "year", value = "population")
+left_join(tidy4a, tidy4b)
+
+```{r}
+#first tidy each table before joining in a single tibble
+
+tidy4a <- table4a %>% 
+  gather("1999", "2000", key = year, value = cases)
+
+tidy4b <- table4b %>% 
+  gather("1999", "2000", key = year, value = population)
+```
+
+```{r}
+#now join the two tables
+
+left_join(tidy4a, tidy4b)
+```
+
+Spreading is the opposite of gathering. You use it when an observation is scattered across multiple rows. For example, take table2: an observation is a country in a year, but each observation is spread across two rows.
+
+```{r}
+table2 %>% 
+spread(key = type, value = count)
+```
+
+
+```{r}
+stocks <- tibble(
+  year   = c(2015, 2015, 2016, 2016),
+  half  = c(   1,    2,     1,    2),
+  return = c(1.88, 0.59, 0.92, 0.17)
+)
+stocks
+
+```
+
+```{r}
+stocks %>% 
+  spread(year, return)
+```
+
+```{r}
+stocks %>% 
+  spread(year, return) %>% 
+  gather("year", "return", `2015`:`2016`)
+
+#notice that year became a character rather than integer after spread - need to use convert = TRUE to retain what it was before. However, since convert = TRUE is guessing the appropriate type it still may not work --> FYI!
+```
+
+######NB###
+The functions spread() and gather() are not perfectly symmetrical because column type information is not transferred between them. When we use gather() on a data frame, it throws away all the information about the original column types. Additionally, it has to coerce all the variables that are being gathered into a single type, since they are going into a single vector. Later if we spread() that data frame, the spread() function has no way to know what the original data types of the columns that were earlier gathered.
+
+In this example, in the original table, the column year was numeric. After running spread() and gather() it is a character vector. Variable names are always converted to a character vector by gather().
+
+The functions spread() and gather() can be closer to symmetrical if we use the convert argument. It will try to convert character vectors to the appropriate type using type.convert().
+
+```{r}
+stocks %>%
+  spread(key = "year", value = "return") %>%
+  gather(`2015`:`2016`, key = "year", value = "return", convert = TRUE)
+```
+
+```{r}
+table4a %>%
+  gather(`1999`, `2000`, key = "year", value = "cases")
+
+#if no back ticks (` `) around numbers, it will not work, as it is looking for 1999th case and 2000th case
+```
+
+```{r}
+people <- tribble(
+  ~name,             ~key,    ~value,
+  #-----------------|--------|------
+  "Phillip Woods",   "age",       45,
+  "Phillip Woods",   "height",   186,
+  "Phillip Woods",   "age",       50,
+  "Jessica Cordero", "age",       37,
+  "Jessica Cordero", "height",   156
+)
+#This is a problematic tibble because Phillip woods has 2 ages, 50 and 45 and they both can't occupy the same space - and there is no corresponding height for that age. unclear which height is which age
+
+#therefore: spread(people, key, value) would not work - results in error
+```
+
+
+```{r}
+#solution create new column with number of observations
+
+people <- tribble(
+  ~name,             ~key,    ~value, ~obs,
+  #-----------------|--------|------|------
+  "Phillip Woods",   "age",       45, 1,
+  "Phillip Woods",   "height",   186, 1,
+  "Phillip Woods",   "age",       50, 2,
+  "Jessica Cordero", "age",       37, 1,
+  "Jessica Cordero", "height",   156, 1
+)
+
+
+```
+
+
+```{r}
+spread(people, key, value)
+```
+
+```{r}
+preg <- tribble(
+  ~pregnant, ~male, ~female,
+  "yes",     NA,    10,
+  "no",      20,    12
+)
+```
+
+```{r}
+preg_tidy <- preg %>% 
+  gather(male, female, key = "sex", value = "count", na.rm = TRUE)
+
+preg_tidy
+```
+
+```{r}
+#storing pregnant and sex as logical vectors
+
+preg_tidy2 <- preg_tidy %>%
+  mutate(female = sex == "female",
+         pregnant = pregnant == "yes") %>%
+  select(female, pregnant, count)
+preg_tidy2
+
+#In the previous data frame, I named the logical variable representing the sex female, not sex. This makes the meaning of the variable self-documenting. If the variable were named sex with values TRUE and FALSE, without reading the documentation, we wouldn’t know whether TRUE means male or female.
+
+#Apart from some minor memory savings, representing these variables as logical vectors results in more clear and concise code.
+```
+
+```{r}
+#separate() pulls apart one column into multiple columns, by splitting wherever a separator character appears.
+
+
 ```
 

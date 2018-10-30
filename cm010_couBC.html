@@ -156,24 +156,92 @@ suppressPackageStartupMessages(library(nycflights13))</code></pre>
 ## 1 A     T    
 ## 2 B     F    
 ## 3 D     T</code></pre>
+<pre class="r"><code>a</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   x1       x2
+##   &lt;chr&gt; &lt;int&gt;
+## 1 A         1
+## 2 B         2
+## 3 C         3</code></pre>
+<pre class="r"><code>b</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   x1    x3   
+##   &lt;chr&gt; &lt;chr&gt;
+## 1 A     T    
+## 2 B     F    
+## 3 D     T</code></pre>
 </div>
 <div id="left_join-join-matching-rows-from-b-to-a-by-matching-x1-variable" class="section level3">
 <h3>left_join: Join matching rows from <code>b</code> to <code>a</code> by matching “x1” variable</h3>
+<pre class="r"><code>left_join(a,b, by = &quot;x1&quot;)</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   x1       x2 x3   
+##   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;
+## 1 A         1 T    
+## 2 B         2 F    
+## 3 C         3 &lt;NA&gt;</code></pre>
 </div>
 <div id="right_join-join-matching-rows-from-a-to-b-by-matching-x1-variable." class="section level3">
 <h3>right_join: Join matching rows from <code>a</code> to <code>b</code> by matching “x1” variable.</h3>
+<pre class="r"><code>right_join(a, b, by = &quot;x1&quot;)</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   x1       x2 x3   
+##   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;
+## 1 A         1 T    
+## 2 B         2 F    
+## 3 D        NA T</code></pre>
 </div>
 <div id="inner_join-join-data.-retain-only-rows-in-both-sets-a-to-b-by-matching-x1-variable." class="section level3">
 <h3>inner_join: Join data. Retain only rows in both sets <code>a</code> to <code>b</code> by matching “x1” variable.</h3>
+<pre class="r"><code>inner_join(a, b, by = &quot;x1&quot;)</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   x1       x2 x3   
+##   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;
+## 1 A         1 T    
+## 2 B         2 F</code></pre>
 </div>
 <div id="full_join-join-data.-retain-all-values-all-rows-of-a-to-b-by-matching-x1" class="section level3">
 <h3>full_join: Join data. Retain all values, all rows of <code>a</code> to <code>b</code> by matching “x1”</h3>
+<pre class="r"><code>full_join(a, b, by = &quot;x1&quot;)</code></pre>
+<pre><code>## # A tibble: 4 x 3
+##   x1       x2 x3   
+##   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;
+## 1 A         1 T    
+## 2 B         2 F    
+## 3 C         3 &lt;NA&gt; 
+## 4 D        NA T</code></pre>
 </div>
 <div id="what-happen-if-we-do-not-specify-by-option" class="section level3">
 <h3>what happen if we do not specify <code>by</code> option?</h3>
+<pre class="r"><code>#still runs it and dplyer recognizes the common column 'x1'
+
+full_join(a, b)</code></pre>
+<pre><code>## Joining, by = &quot;x1&quot;</code></pre>
+<pre><code>## # A tibble: 4 x 3
+##   x1       x2 x3   
+##   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;
+## 1 A         1 T    
+## 2 B         2 F    
+## 3 C         3 &lt;NA&gt; 
+## 4 D        NA T</code></pre>
+<pre class="r"><code>left_join(a, b)</code></pre>
+<pre><code>## Joining, by = &quot;x1&quot;</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   x1       x2 x3   
+##   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;
+## 1 A         1 T    
+## 2 B         2 F    
+## 3 C         3 &lt;NA&gt;</code></pre>
 </div>
 <div id="what-happen-if-we-join-two-different-variables-e.g.-x1-to-x3-from-two-tibbles-a-to-b" class="section level3">
 <h3>what happen if we join two different variables (e.g., “x1” to “x3”) from two tibbles <code>a</code> to <code>b</code>?</h3>
+<pre class="r"><code>left_join(a, b, by = c(&quot;x1&quot; = &quot;x3&quot;))</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   x1       x2 x1.y 
+##   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;
+## 1 A         1 &lt;NA&gt; 
+## 2 B         2 &lt;NA&gt; 
+## 3 C         3 &lt;NA&gt;</code></pre>
 </div>
 <div id="what-happen-if-two-columns-of-a-and-c-datasets-have-the-identical-colnames" class="section level3">
 <h3>what happen if two columns of <code>a</code> and <code>c</code> datasets have the identical colnames?</h3>
@@ -185,6 +253,21 @@ suppressPackageStartupMessages(library(nycflights13))</code></pre>
 ## 1 A         1
 ## 2 B         4
 ## 3 x         5</code></pre>
+<pre class="r"><code>(c &lt;- tibble(x1 = c(LETTERS[1:2],&quot;x&quot;), x2 = c(1,4,5)))</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   x1       x2
+##   &lt;chr&gt; &lt;dbl&gt;
+## 1 A         1
+## 2 B         4
+## 3 x         5</code></pre>
+<pre class="r"><code>left_join(a, c)</code></pre>
+<pre><code>## Joining, by = c(&quot;x1&quot;, &quot;x2&quot;)</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   x1       x2
+##   &lt;chr&gt; &lt;dbl&gt;
+## 1 A         1
+## 2 B         2
+## 3 C         3</code></pre>
 </div>
 </div>
 <div id="in-class-practice" class="section level2">
@@ -207,27 +290,206 @@ class(flights)</code></pre>
 <pre><code>##  [1] &quot;origin&quot;     &quot;year&quot;       &quot;month&quot;      &quot;day&quot;        &quot;hour&quot;      
 ##  [6] &quot;temp&quot;       &quot;dewp&quot;       &quot;humid&quot;      &quot;wind_dir&quot;   &quot;wind_speed&quot;
 ## [11] &quot;wind_gust&quot;  &quot;precip&quot;     &quot;pressure&quot;   &quot;visib&quot;      &quot;time_hour&quot;</code></pre>
+<pre class="r"><code>dim(flights)</code></pre>
+<pre><code>## [1] 336776     19</code></pre>
 </div>
 <div id="drop-unimportant-variables-so-its-easier-to-understand-the-join-results.-also-take-first-1000-rows-to-run-it-faster." class="section level3">
 <h3>2. Drop unimportant variables so it’s easier to understand the join results. Also take first 1000 rows to run it faster.</h3>
 <pre class="r"><code>flights2 &lt;- flights[1:1000,] %&gt;% 
-  select(year, tailnum, carrier, time_hour)</code></pre>
+  select(year, tailnum, carrier, time_hour)
+dim(flights2)</code></pre>
+<pre><code>## [1] 1000    4</code></pre>
 </div>
 <div id="add-airline-names-to-flights2-from-airlines-dataset." class="section level3">
 <h3>3. Add airline names to <code>flights2</code> from <code>airlines</code> dataset.</h3>
-<pre class="r"><code># Which join function to use?</code></pre>
+<pre class="r"><code># Which join function to use?
+colnames(airlines)</code></pre>
+<pre><code>## [1] &quot;carrier&quot; &quot;name&quot;</code></pre>
+<pre class="r"><code>colnames(flights2)</code></pre>
+<pre><code>## [1] &quot;year&quot;      &quot;tailnum&quot;   &quot;carrier&quot;   &quot;time_hour&quot;</code></pre>
+<pre class="r"><code>left_join(flights2, airlines)</code></pre>
+<pre><code>## Joining, by = &quot;carrier&quot;</code></pre>
+<pre><code>## Warning in as.POSIXlt.POSIXct(x, tz): unknown timezone 'zone/tz/2018e.1.0/
+## zoneinfo/America/Vancouver'
+
+## Warning in as.POSIXlt.POSIXct(x, tz): unknown timezone 'zone/tz/2018e.1.0/
+## zoneinfo/America/Vancouver'</code></pre>
+<pre><code>## # A tibble: 1,000 x 5
+##     year tailnum carrier time_hour           name                    
+##    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dttm&gt;              &lt;chr&gt;                   
+##  1  2013 N14228  UA      2013-01-01 05:00:00 United Air Lines Inc.   
+##  2  2013 N24211  UA      2013-01-01 05:00:00 United Air Lines Inc.   
+##  3  2013 N619AA  AA      2013-01-01 05:00:00 American Airlines Inc.  
+##  4  2013 N804JB  B6      2013-01-01 05:00:00 JetBlue Airways         
+##  5  2013 N668DN  DL      2013-01-01 06:00:00 Delta Air Lines Inc.    
+##  6  2013 N39463  UA      2013-01-01 05:00:00 United Air Lines Inc.   
+##  7  2013 N516JB  B6      2013-01-01 06:00:00 JetBlue Airways         
+##  8  2013 N829AS  EV      2013-01-01 06:00:00 ExpressJet Airlines Inc.
+##  9  2013 N593JB  B6      2013-01-01 06:00:00 JetBlue Airways         
+## 10  2013 N3ALAA  AA      2013-01-01 06:00:00 American Airlines Inc.  
+## # ... with 990 more rows</code></pre>
+<pre class="r"><code>colnames(airlines)</code></pre>
+<pre><code>## [1] &quot;carrier&quot; &quot;name&quot;</code></pre>
+<pre class="r"><code>colnames(flights2)</code></pre>
+<pre><code>## [1] &quot;year&quot;      &quot;tailnum&quot;   &quot;carrier&quot;   &quot;time_hour&quot;</code></pre>
+<pre class="r"><code>right_join(flights2, airlines)</code></pre>
+<pre><code>## Joining, by = &quot;carrier&quot;</code></pre>
+<pre><code>## Warning in as.POSIXlt.POSIXct(x, tz): unknown timezone 'zone/tz/2018e.1.0/
+## zoneinfo/America/Vancouver'
+
+## Warning in as.POSIXlt.POSIXct(x, tz): unknown timezone 'zone/tz/2018e.1.0/
+## zoneinfo/America/Vancouver'</code></pre>
+<pre><code>## # A tibble: 1,002 x 5
+##     year tailnum carrier time_hour           name             
+##    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dttm&gt;              &lt;chr&gt;            
+##  1  2013 N915XJ  9E      2013-01-01 08:00:00 Endeavor Air Inc.
+##  2  2013 N8444F  9E      2013-01-01 15:00:00 Endeavor Air Inc.
+##  3  2013 N920XJ  9E      2013-01-01 14:00:00 Endeavor Air Inc.
+##  4  2013 N8409N  9E      2013-01-01 15:00:00 Endeavor Air Inc.
+##  5  2013 N8631E  9E      2013-01-01 15:00:00 Endeavor Air Inc.
+##  6  2013 N913XJ  9E      2013-01-01 15:00:00 Endeavor Air Inc.
+##  7  2013 N904XJ  9E      2013-01-01 15:00:00 Endeavor Air Inc.
+##  8  2013 N934XJ  9E      2013-01-01 15:00:00 Endeavor Air Inc.
+##  9  2013 N910XJ  9E      2013-01-01 16:00:00 Endeavor Air Inc.
+## 10  2013 N931XJ  9E      2013-01-01 16:00:00 Endeavor Air Inc.
+## # ... with 992 more rows</code></pre>
+<pre class="r"><code>colnames(airlines)</code></pre>
+<pre><code>## [1] &quot;carrier&quot; &quot;name&quot;</code></pre>
+<pre class="r"><code>colnames(flights2)</code></pre>
+<pre><code>## [1] &quot;year&quot;      &quot;tailnum&quot;   &quot;carrier&quot;   &quot;time_hour&quot;</code></pre>
+<pre class="r"><code>left_join(flights2, airlines)</code></pre>
+<pre><code>## Joining, by = &quot;carrier&quot;</code></pre>
+<pre><code>## Warning in as.POSIXlt.POSIXct(x, tz): unknown timezone 'zone/tz/2018e.1.0/
+## zoneinfo/America/Vancouver'
+
+## Warning in as.POSIXlt.POSIXct(x, tz): unknown timezone 'zone/tz/2018e.1.0/
+## zoneinfo/America/Vancouver'</code></pre>
+<pre><code>## # A tibble: 1,000 x 5
+##     year tailnum carrier time_hour           name                    
+##    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dttm&gt;              &lt;chr&gt;                   
+##  1  2013 N14228  UA      2013-01-01 05:00:00 United Air Lines Inc.   
+##  2  2013 N24211  UA      2013-01-01 05:00:00 United Air Lines Inc.   
+##  3  2013 N619AA  AA      2013-01-01 05:00:00 American Airlines Inc.  
+##  4  2013 N804JB  B6      2013-01-01 05:00:00 JetBlue Airways         
+##  5  2013 N668DN  DL      2013-01-01 06:00:00 Delta Air Lines Inc.    
+##  6  2013 N39463  UA      2013-01-01 05:00:00 United Air Lines Inc.   
+##  7  2013 N516JB  B6      2013-01-01 06:00:00 JetBlue Airways         
+##  8  2013 N829AS  EV      2013-01-01 06:00:00 ExpressJet Airlines Inc.
+##  9  2013 N593JB  B6      2013-01-01 06:00:00 JetBlue Airways         
+## 10  2013 N3ALAA  AA      2013-01-01 06:00:00 American Airlines Inc.  
+## # ... with 990 more rows</code></pre>
+<pre class="r"><code>right_join(flights2, airlines)</code></pre>
+<pre><code>## Joining, by = &quot;carrier&quot;</code></pre>
+<pre><code>## Warning in as.POSIXlt.POSIXct(x, tz): unknown timezone 'zone/tz/2018e.1.0/
+## zoneinfo/America/Vancouver'
+
+## Warning in as.POSIXlt.POSIXct(x, tz): unknown timezone 'zone/tz/2018e.1.0/
+## zoneinfo/America/Vancouver'</code></pre>
+<pre><code>## # A tibble: 1,002 x 5
+##     year tailnum carrier time_hour           name             
+##    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dttm&gt;              &lt;chr&gt;            
+##  1  2013 N915XJ  9E      2013-01-01 08:00:00 Endeavor Air Inc.
+##  2  2013 N8444F  9E      2013-01-01 15:00:00 Endeavor Air Inc.
+##  3  2013 N920XJ  9E      2013-01-01 14:00:00 Endeavor Air Inc.
+##  4  2013 N8409N  9E      2013-01-01 15:00:00 Endeavor Air Inc.
+##  5  2013 N8631E  9E      2013-01-01 15:00:00 Endeavor Air Inc.
+##  6  2013 N913XJ  9E      2013-01-01 15:00:00 Endeavor Air Inc.
+##  7  2013 N904XJ  9E      2013-01-01 15:00:00 Endeavor Air Inc.
+##  8  2013 N934XJ  9E      2013-01-01 15:00:00 Endeavor Air Inc.
+##  9  2013 N910XJ  9E      2013-01-01 16:00:00 Endeavor Air Inc.
+## 10  2013 N931XJ  9E      2013-01-01 16:00:00 Endeavor Air Inc.
+## # ... with 992 more rows</code></pre>
 </div>
 <div id="add-weather-information-to-the-flights2-dataset-by-matching-year-and-time_hour-variables." class="section level3">
 <h3>4. Add <code>weather</code> information to the <code>flights2</code> dataset by matching “year” and “time_hour” variables.</h3>
+<pre class="r"><code>colnames(weather)</code></pre>
+<pre><code>##  [1] &quot;origin&quot;     &quot;year&quot;       &quot;month&quot;      &quot;day&quot;        &quot;hour&quot;      
+##  [6] &quot;temp&quot;       &quot;dewp&quot;       &quot;humid&quot;      &quot;wind_dir&quot;   &quot;wind_speed&quot;
+## [11] &quot;wind_gust&quot;  &quot;precip&quot;     &quot;pressure&quot;   &quot;visib&quot;      &quot;time_hour&quot;</code></pre>
+<pre class="r"><code>flights %&gt;% 
+  left_join(weather, by = c(&quot;year&quot;, &quot;time_hour&quot;))</code></pre>
+<pre><code>## # A tibble: 1,006,987 x 32
+##     year month.x day.x dep_time sched_dep_time dep_delay arr_time
+##    &lt;dbl&gt;   &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013       1     1      517            515         2      830
+##  2  2013       1     1      517            515         2      830
+##  3  2013       1     1      517            515         2      830
+##  4  2013       1     1      533            529         4      850
+##  5  2013       1     1      533            529         4      850
+##  6  2013       1     1      533            529         4      850
+##  7  2013       1     1      542            540         2      923
+##  8  2013       1     1      542            540         2      923
+##  9  2013       1     1      542            540         2      923
+## 10  2013       1     1      544            545        -1     1004
+## # ... with 1,006,977 more rows, and 25 more variables:
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin.x &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour.x &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;,
+## #   origin.y &lt;chr&gt;, month.y &lt;dbl&gt;, day.y &lt;int&gt;, hour.y &lt;int&gt;, temp &lt;dbl&gt;,
+## #   dewp &lt;dbl&gt;, humid &lt;dbl&gt;, wind_dir &lt;dbl&gt;, wind_speed &lt;dbl&gt;,
+## #   wind_gust &lt;dbl&gt;, precip &lt;dbl&gt;, pressure &lt;dbl&gt;, visib &lt;dbl&gt;</code></pre>
 </div>
 <div id="add-weather-information-to-the-flights2-dataset-by-matching-only-time_hour-variable" class="section level3">
 <h3>5. Add <code>weather</code> information to the <code>flights2</code> dataset by matching only “time_hour” variable</h3>
+<pre class="r"><code>colnames(weather)</code></pre>
+<pre><code>##  [1] &quot;origin&quot;     &quot;year&quot;       &quot;month&quot;      &quot;day&quot;        &quot;hour&quot;      
+##  [6] &quot;temp&quot;       &quot;dewp&quot;       &quot;humid&quot;      &quot;wind_dir&quot;   &quot;wind_speed&quot;
+## [11] &quot;wind_gust&quot;  &quot;precip&quot;     &quot;pressure&quot;   &quot;visib&quot;      &quot;time_hour&quot;</code></pre>
+<pre class="r"><code>flights %&gt;% 
+  left_join(weather, by = c(&quot;time_hour&quot;))</code></pre>
+<pre><code>## # A tibble: 1,006,987 x 33
+##    year.x month.x day.x dep_time sched_dep_time dep_delay arr_time
+##     &lt;int&gt;   &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1   2013       1     1      517            515         2      830
+##  2   2013       1     1      517            515         2      830
+##  3   2013       1     1      517            515         2      830
+##  4   2013       1     1      533            529         4      850
+##  5   2013       1     1      533            529         4      850
+##  6   2013       1     1      533            529         4      850
+##  7   2013       1     1      542            540         2      923
+##  8   2013       1     1      542            540         2      923
+##  9   2013       1     1      542            540         2      923
+## 10   2013       1     1      544            545        -1     1004
+## # ... with 1,006,977 more rows, and 26 more variables:
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin.x &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour.x &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;,
+## #   origin.y &lt;chr&gt;, year.y &lt;dbl&gt;, month.y &lt;dbl&gt;, day.y &lt;int&gt;,
+## #   hour.y &lt;int&gt;, temp &lt;dbl&gt;, dewp &lt;dbl&gt;, humid &lt;dbl&gt;, wind_dir &lt;dbl&gt;,
+## #   wind_speed &lt;dbl&gt;, wind_gust &lt;dbl&gt;, precip &lt;dbl&gt;, pressure &lt;dbl&gt;,
+## #   visib &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <div id="types-of-filtering-join" class="section level2">
 <h2>Types of filtering join</h2>
+<pre class="r"><code>semi_join(a, b, by = &quot;x1&quot;)</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   x1       x2
+##   &lt;chr&gt; &lt;int&gt;
+## 1 A         1
+## 2 B         2</code></pre>
+<pre class="r"><code>a</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   x1       x2
+##   &lt;chr&gt; &lt;int&gt;
+## 1 A         1
+## 2 B         2
+## 3 C         3</code></pre>
+<pre class="r"><code>b</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   x1    x3   
+##   &lt;chr&gt; &lt;chr&gt;
+## 1 A     T    
+## 2 B     F    
+## 3 D     T</code></pre>
 <div id="lets-filter-tibbles-using-two-filtering-functions-semi_join-anti_join" class="section level3">
 <h3>Let’s filter tibbles using two filtering functions: <code>semi_join</code>, <code>anti_join</code></h3>
+<pre class="r"><code>anti_join(a,b)</code></pre>
+<pre><code>## Joining, by = &quot;x1&quot;</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   x1       x2
+##   &lt;chr&gt; &lt;int&gt;
+## 1 C         3</code></pre>
 </div>
 <div id="example-for-semi_join-all-rows-in-a-that-have-a-match-in-b" class="section level3">
 <h3>example for <code>semi_join</code>: All rows in <code>a</code> that have a match in <code>b</code></h3>
@@ -263,12 +525,36 @@ class(flights)</code></pre>
 </div>
 <div id="example-for-intersect-rows-that-appear-in-both-y-and-z" class="section level3">
 <h3>example for <code>intersect</code>: Rows that appear in both <code>y</code> and <code>z</code></h3>
+<pre class="r"><code>intersect(y, z)</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   x1       x2
+##   &lt;chr&gt; &lt;int&gt;
+## 1 B         2
+## 2 C         3</code></pre>
 </div>
 <div id="example-for-union-rows-that-appear-in-either-or-both-y-and-z" class="section level3">
 <h3>example for <code>union</code>: Rows that appear in either or both <code>y</code> and <code>z</code></h3>
+<pre class="r"><code>union(y, z)</code></pre>
+<pre><code>## # A tibble: 4 x 2
+##   x1       x2
+##   &lt;chr&gt; &lt;int&gt;
+## 1 D         4
+## 2 C         3
+## 3 B         2
+## 4 A         1</code></pre>
 </div>
 <div id="example-for-setdiff-rows-that-appear-in-y-but-not-z.-caution-setdiff-for-y-to-z-and-z-to-y-are-different." class="section level3">
 <h3>example for <code>setdiff</code>: Rows that appear in <code>y</code> but not <code>z</code>. <strong>Caution:</strong> <code>setdiff</code> for <code>y</code> to <code>z</code> and <code>z</code> to <code>y</code> are different.</h3>
+<pre class="r"><code>setdiff(y, z)</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   x1       x2
+##   &lt;chr&gt; &lt;int&gt;
+## 1 A         1</code></pre>
+<pre class="r"><code>setdiff(z, y)</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   x1       x2
+##   &lt;chr&gt; &lt;int&gt;
+## 1 D         4</code></pre>
 </div>
 <div id="what-happen-if-colnames-are-differentin-y-and-x-is-there-any-error-message-and-why" class="section level3">
 <h3>what happen if colnames are differentin <code>y</code> and <code>x</code>? Is there any error message and why?</h3>
@@ -279,6 +565,7 @@ class(flights)</code></pre>
 ## 1 B         2
 ## 2 C         3
 ## 3 D         4</code></pre>
+<pre class="r"><code>#intersect(y, x) wont work (error) because in set functions the datasets have to have identical columns</code></pre>
 </div>
 </div>
 <div id="types-of-binding-datasets" class="section level2">
@@ -288,12 +575,44 @@ class(flights)</code></pre>
 </div>
 <div id="example-for-bind_rows-append-z-to-y-as-new-rows" class="section level3">
 <h3>example for <code>bind_rows</code>: Append <code>z</code> to <code>y</code> as new rows</h3>
+<pre class="r"><code>bind_rows(y, z)</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   x1       x2
+##   &lt;chr&gt; &lt;int&gt;
+## 1 A         1
+## 2 B         2
+## 3 C         3
+## 4 B         2
+## 5 C         3
+## 6 D         4</code></pre>
 </div>
 <div id="example-for-bind_cols-append-z-to-y-as-new-columns.-caution-matches-rows-by-position.-check-colnames-after-binding." class="section level3">
 <h3>example for <code>bind_cols</code>: Append <code>z</code> to <code>y</code> as new columns. <strong>Caution</strong>: matches rows by position. Check colnames after binding.</h3>
+<pre class="r"><code>bind_cols(y, z)</code></pre>
+<pre><code>## # A tibble: 3 x 4
+##   x1       x2 x11     x21
+##   &lt;chr&gt; &lt;int&gt; &lt;chr&gt; &lt;int&gt;
+## 1 A         1 B         2
+## 2 B         2 C         3
+## 3 C         3 D         4</code></pre>
+<pre class="r"><code>z</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   x1       x2
+##   &lt;chr&gt; &lt;int&gt;
+## 1 B         2
+## 2 C         3
+## 3 D         4</code></pre>
+<pre class="r"><code>#in column binding it doesn't have to have any matching columns, it just appends its all together by columns, but they can't be same names as that column will be mushed together</code></pre>
 </div>
 <div id="what-happen-if-colnames-are-different-between-y-and-x-datasets" class="section level3">
 <h3>what happen if colnames are different between <code>y</code> and <code>x</code> datasets?</h3>
+<pre class="r"><code>bind_cols(y, z)</code></pre>
+<pre><code>## # A tibble: 3 x 4
+##   x1       x2 x11     x21
+##   &lt;chr&gt; &lt;int&gt; &lt;chr&gt; &lt;int&gt;
+## 1 A         1 B         2
+## 2 B         2 C         3
+## 3 C         3 D         4</code></pre>
 </div>
 </div>
 <div id="practice-exercises" class="section level2">
@@ -301,12 +620,125 @@ class(flights)</code></pre>
 <p>Practice these concepts in the following exercises. It might help you to first identify the type of function you are applying.</p>
 <div id="filter-the-rows-of-flights2-by-matching-year-and-time_hour-variables-to-weather-dataset.-use-both-semi_join-and-anti_join" class="section level3">
 <h3>1. Filter the rows of <code>flights2</code> by matching “year” and “time_hour” variables to <code>weather</code> dataset. Use both <code>semi_join()</code> and <code>anti_join()</code></h3>
+<pre class="r"><code>semi_join(flights2, weather)</code></pre>
+<pre><code>## Joining, by = c(&quot;year&quot;, &quot;time_hour&quot;)</code></pre>
+<pre><code>## Warning in as.POSIXlt.POSIXct(x, tz): unknown timezone 'zone/tz/2018e.1.0/
+## zoneinfo/America/Vancouver'
+
+## Warning in as.POSIXlt.POSIXct(x, tz): unknown timezone 'zone/tz/2018e.1.0/
+## zoneinfo/America/Vancouver'</code></pre>
+<pre><code>## # A tibble: 1,000 x 4
+##     year tailnum carrier time_hour          
+##    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dttm&gt;             
+##  1  2013 N14228  UA      2013-01-01 05:00:00
+##  2  2013 N24211  UA      2013-01-01 05:00:00
+##  3  2013 N619AA  AA      2013-01-01 05:00:00
+##  4  2013 N804JB  B6      2013-01-01 05:00:00
+##  5  2013 N668DN  DL      2013-01-01 06:00:00
+##  6  2013 N39463  UA      2013-01-01 05:00:00
+##  7  2013 N516JB  B6      2013-01-01 06:00:00
+##  8  2013 N829AS  EV      2013-01-01 06:00:00
+##  9  2013 N593JB  B6      2013-01-01 06:00:00
+## 10  2013 N3ALAA  AA      2013-01-01 06:00:00
+## # ... with 990 more rows</code></pre>
+<pre class="r"><code>anti_join(flights2, weather)</code></pre>
+<pre><code>## Joining, by = c(&quot;year&quot;, &quot;time_hour&quot;)</code></pre>
+<pre><code>## # A tibble: 0 x 4
+## # ... with 4 variables: year &lt;int&gt;, tailnum &lt;chr&gt;, carrier &lt;chr&gt;,
+## #   time_hour &lt;dttm&gt;</code></pre>
+<pre class="r"><code>#doesn't produce anything</code></pre>
 </div>
 <div id="can-we-apply-set-and-binding-funcions-between-flights2-and-weather-datasets.-why-and-why-not" class="section level3">
 <h3>2. Can we apply <code>set</code> and <code>binding</code> funcions between <code>flights2</code> and <code>weather</code> datasets. Why and why not?</h3>
+<pre class="r"><code># union(flights2, weather) doesn't work
+bind_rows(flights2, weather)</code></pre>
+<pre><code>## Warning in as.POSIXlt.POSIXct(x, tz): unknown timezone 'zone/tz/2018e.1.0/
+## zoneinfo/America/Vancouver'
+
+## Warning in as.POSIXlt.POSIXct(x, tz): unknown timezone 'zone/tz/2018e.1.0/
+## zoneinfo/America/Vancouver'</code></pre>
+<pre><code>## # A tibble: 27,115 x 17
+##     year tailnum carrier time_hour           origin month   day  hour  temp
+##    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dttm&gt;              &lt;chr&gt;  &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;
+##  1  2013 N14228  UA      2013-01-01 05:00:00 &lt;NA&gt;      NA    NA    NA    NA
+##  2  2013 N24211  UA      2013-01-01 05:00:00 &lt;NA&gt;      NA    NA    NA    NA
+##  3  2013 N619AA  AA      2013-01-01 05:00:00 &lt;NA&gt;      NA    NA    NA    NA
+##  4  2013 N804JB  B6      2013-01-01 05:00:00 &lt;NA&gt;      NA    NA    NA    NA
+##  5  2013 N668DN  DL      2013-01-01 06:00:00 &lt;NA&gt;      NA    NA    NA    NA
+##  6  2013 N39463  UA      2013-01-01 05:00:00 &lt;NA&gt;      NA    NA    NA    NA
+##  7  2013 N516JB  B6      2013-01-01 06:00:00 &lt;NA&gt;      NA    NA    NA    NA
+##  8  2013 N829AS  EV      2013-01-01 06:00:00 &lt;NA&gt;      NA    NA    NA    NA
+##  9  2013 N593JB  B6      2013-01-01 06:00:00 &lt;NA&gt;      NA    NA    NA    NA
+## 10  2013 N3ALAA  AA      2013-01-01 06:00:00 &lt;NA&gt;      NA    NA    NA    NA
+## # ... with 27,105 more rows, and 8 more variables: dewp &lt;dbl&gt;,
+## #   humid &lt;dbl&gt;, wind_dir &lt;dbl&gt;, wind_speed &lt;dbl&gt;, wind_gust &lt;dbl&gt;,
+## #   precip &lt;dbl&gt;, pressure &lt;dbl&gt;, visib &lt;dbl&gt;</code></pre>
+<pre class="r"><code>#bind_cols(flights2, weather) doesn't work because different number of rows</code></pre>
 </div>
 <div id="lets-create-a-tibble-p-with-x1-and-x2-coulmns-and-have-duplicated-element-in-x1-column.-create-another-tibble-q-with-x1-and-x3-columns.-then-apply-left_join-function-p-to-q-and-q-to-p." class="section level3">
 <h3>3. Let’s create a tibble <code>p</code> with “x1” and “x2” coulmns and have duplicated element in “x1” column. Create another tibble <code>q</code> with “x1” and “x3” columns. Then apply <code>left_join</code> function <code>p</code> to <code>q</code> and <code>q</code> to <code>p</code>.</h3>
+<pre class="r"><code>(p &lt;- tibble(x1 = c(&quot;a&quot;, &quot;b&quot;, &quot;b&quot;, &quot;c&quot;), x2 =1:4))</code></pre>
+<pre><code>## # A tibble: 4 x 2
+##   x1       x2
+##   &lt;chr&gt; &lt;int&gt;
+## 1 a         1
+## 2 b         2
+## 3 b         3
+## 4 c         4</code></pre>
+<pre class="r"><code>(q &lt;-tibble(x1 = c(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;, &quot;c&quot;), x3 = 5:8))</code></pre>
+<pre><code>## # A tibble: 4 x 2
+##   x1       x3
+##   &lt;chr&gt; &lt;int&gt;
+## 1 a         5
+## 2 b         6
+## 3 c         7
+## 4 c         8</code></pre>
+<pre class="r"><code>left_join(p, q)</code></pre>
+<pre><code>## Joining, by = &quot;x1&quot;</code></pre>
+<pre><code>## # A tibble: 5 x 3
+##   x1       x2    x3
+##   &lt;chr&gt; &lt;int&gt; &lt;int&gt;
+## 1 a         1     5
+## 2 b         2     6
+## 3 b         3     6
+## 4 c         4     7
+## 5 c         4     8</code></pre>
+<pre class="r"><code>left_join(q, p)</code></pre>
+<pre><code>## Joining, by = &quot;x1&quot;</code></pre>
+<pre><code>## # A tibble: 5 x 3
+##   x1       x3    x2
+##   &lt;chr&gt; &lt;int&gt; &lt;int&gt;
+## 1 a         5     1
+## 2 b         6     2
+## 3 b         6     3
+## 4 c         7     4
+## 5 c         8     4</code></pre>
+<pre class="r"><code>(p &lt;- tibble(x1 = c(&quot;a&quot;, &quot;b&quot;, &quot;b&quot;, &quot;c&quot;), x2 =1:4))</code></pre>
+<pre><code>## # A tibble: 4 x 2
+##   x1       x2
+##   &lt;chr&gt; &lt;int&gt;
+## 1 a         1
+## 2 b         2
+## 3 b         3
+## 4 c         4</code></pre>
+<pre class="r"><code>(q &lt;-tibble(x1 = c(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;, &quot;c&quot;), x3 = 5:8))</code></pre>
+<pre><code>## # A tibble: 4 x 2
+##   x1       x3
+##   &lt;chr&gt; &lt;int&gt;
+## 1 a         5
+## 2 b         6
+## 3 c         7
+## 4 c         8</code></pre>
+<pre class="r"><code>left_join(q, p)</code></pre>
+<pre><code>## Joining, by = &quot;x1&quot;</code></pre>
+<pre><code>## # A tibble: 5 x 3
+##   x1       x3    x2
+##   &lt;chr&gt; &lt;int&gt; &lt;int&gt;
+## 1 a         5     1
+## 2 b         6     2
+## 3 b         6     3
+## 4 c         7     4
+## 5 c         8     4</code></pre>
 </div>
 </div>
 

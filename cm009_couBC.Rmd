@@ -2,74 +2,9 @@
 title: "cm08_CouBC"
 author: "CouBC"
 date: '2018-10-02'
-output: html_document
+output: github_document
 ---
----
-title: "cm009 Exercises: tidy data"
-output: html_notebook
-editor_options: 
-  chunk_output_type: inline
----
-#read_csv keeps things as characters rather than factors like read.csv
-```{r}
-suppressPackageStartupMessages(library(tidyverse))
 
-```
-
-## Reading and Writing Data: Exercises
-
-Make a tibble of letters, their order in the alphabet, and then a pasting of the two columns together.
-
-#paste puts two things together with a space in between. Or you can do paste0 for no space
-
-```{r}
-tibble(let = letters,
-       num = 1:length(letters),
-       comb = paste(let, num))
-
-```
-
-Make a tibble of three names and commute times.
-
-```{r}
-tribble(
-  ~name, ~time,
-  "Frank", 30,
-  "Lisa", 15,
-  "Fred", 40,)
-```
-
-
-Write the `iris` data frame as a `csv`. 
-
-```{r}
-write_csv(iris, "iris.csv")
-```
-
-Write the `iris` data frame to a file delimited by a dollar sign. 
-
-```{r}
-write_delim(iris, "iris.txt", delim = "$")
-```
-
-Read the dollar-delimited `iris` data to a tibble.
-
-```{r}
-
-read_delim("iris.txt", delim = "$")
-```
-
-Read these three LOTR csv's, saving them to `lotr1`, `lotr2`, and `lotr3`:
-
-- https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Fellowship_Of_The_Ring.csv
-- https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Two_Towers.csv
-- https://github.com/jennybc/lotr-tidy/blob/master/data/The_Return_Of_The_King.csv
-
-```{r}
-lotr1 <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Fellowship_Of_The_Ring.csv")
-lotr2 <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Two_Towers.csv")
-lotr3 <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Return_Of_The_King.csv")
-```
 
 ## `gather()`
 
@@ -246,3 +181,4 @@ uncount(df, n, .id = "id")
 ## Time remaining?
 
 Time permitting, do [this exercise](https://github.com/jennybc/lotr-tidy/blob/master/02-gather.md#exercises) to practice tidying data. 
+

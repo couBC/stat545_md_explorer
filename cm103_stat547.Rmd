@@ -213,7 +213,12 @@ We can do the subsetting much easier with these shortcuts: just replace function
 - name you'd like to subset by.
 
 ```{r}
-map_chr(wesanderson, 1) # %>% unname()
+map_chr(wesanderson, 1)  
+```
+
+```{r}
+map_chr(wesanderson, 1)  %>% unname()
+#%>% unname() gets rid of the name
 ```
 
 
@@ -228,7 +233,8 @@ map_chr(wesanderson, 1) # %>% unname()
 Note: each character's list entry has a component named `titles` as the 9th entry.
 
 ```{r}
-YOUR_CODE_HERE
+map(got_chars, "titles")
+
 ```
 
 2. For the `got_chars` data:
@@ -239,6 +245,10 @@ YOUR_CODE_HERE
 
 ```{r}
 desired_info <- c("name", "born")
+map(got_chars, `[`, desired_info) %>% head()
+
+map_dfr(got_chars, `[`, desired_info)
+#looks nicer but more error prone
 ```
 
 Note: as Jenny says, it's always safer (from a programming perspective) to work with output that's more predictable. The following would be safer, and is still readable:
@@ -250,6 +260,8 @@ got_chars %>% {
         born = map_chr(., "born")
     )
 }
+#"."means whatever is on the left hand side of the pipe, in this case "got_chars"
+#{} tricks r into 
 ```
 
 Note the curly braces "tricks" the object prior to the pipe from entering as the first argument to `tibble`, because ` ``{`` ` only returns the last line evaluated. In this case there are two: the above code is equivalent to
